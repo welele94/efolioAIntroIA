@@ -1,8 +1,11 @@
 def ler_instancia(caminho):
-    with open(caminho, "r", encoding="utf-8") as ficheiro:
+    # Abrir com utf-8-sig evita problemas caso o ficheiro tenha BOM.
+    with open(caminho, "r", encoding="utf-8-sig") as ficheiro:
         conteudo = ficheiro.read()
 
-    conteudo = conteudo.replace("\n", "")
+    # As casas vazias são espaços e têm de ser preservadas.
+    # Por isso removem-se apenas quebras de linha, incluindo CRLF do Windows.
+    conteudo = conteudo.replace("\n", "").replace("\r", "")
 
     if len(conteudo) != 64:
         raise ValueError(f"A instância deve ter 64 caracteres, mas tem {len(conteudo)}.")
@@ -14,6 +17,7 @@ def ler_instancia(caminho):
         tabuleiro.append(linha)
 
     return tabuleiro
+
 
 def pos_para_casa(linha, coluna):
     letras = "abcdefgh"
